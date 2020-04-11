@@ -1,0 +1,4 @@
+This code runs the @AsuRefund Twitter bot (https://twitter.com/AsuRefund)
+
+Message templates are created by the user, then run throught the program to fill in the required stats, then posted to Twitter.
+The bot also interacts with other twitter users and searches for new users to follow that would likely to interact with the account.
