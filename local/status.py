@@ -16,57 +16,51 @@ AVG_MEAL_PLAN_COST = 3358 / DAYS_IN_SEMESTER
 AVG_PARKING_COST = 495 / DAYS_IN_SEMESTER
 
 
-def compute_Cost(type):
-    if(type.lower() == 'ddorm'):
-        return '${:,.2f}'.format(AVG_DORM_COST)
+def compute_Cost():
+    hash = {}
 
-    elif(type.lower() == 'dmeal'):
-        return '${:,.2f}'.format(AVG_MEAL_PLAN_COST)
+    hash['{ddorm}'] = ('${:,.2f}').format(AVG_DORM_COST)
 
-    elif(type.lower() == 'dparking'):
-        return '${:,.2f}'.format(AVG_PARKING_COST)
+    hash['{dmeal}'] = '${:,.2f}'.format(AVG_MEAL_PLAN_COST)
 
-    elif(type.lower() == 'tdorm'):
-        return '${:,.2f}'.format(AVG_DORM_COST * DAYS_ELAPSED)
+    hash['{dparking}'] = '${:,.2f}'.format(AVG_PARKING_COST)
 
-    elif(type.lower() == 'tmeal'):
-        return '${:,.2f}'.format(AVG_MEAL_PLAN_COST * DAYS_ELAPSED)
+    hash['{tdorm}'] = '${:,.2f}'.format(AVG_DORM_COST * DAYS_ELAPSED)
 
-    elif(type.lower() == 'tparking'):
-        return '${:,.2f}'.format(AVG_PARKING_COST * DAYS_ELAPSED)
+    hash['{tmeal}'] = '${:,.2f}'.format(AVG_MEAL_PLAN_COST * DAYS_ELAPSED)
 
-    elif(type.lower() == 'ddormmeal'):
-        return '${:,.2f}'.format(AVG_DORM_COST + AVG_MEAL_PLAN_COST + AVG_PARKING_COST)
+    hash['{tparking}'] = '${:,.2f}'.format(AVG_PARKING_COST * DAYS_ELAPSED)
 
-    elif(type.lower() == 'dall'):
-        return '${:,.2f}'.format(AVG_DORM_COST + AVG_MEAL_PLAN_COST + AVG_PARKING_COST)
+    hash['{ddormmeal}'] = '${:,.2f}'.format(
+        AVG_DORM_COST + AVG_MEAL_PLAN_COST + AVG_PARKING_COST)
 
-    elif(type.lower() == 'tall'):
-        return '${:,.2f}'.format((AVG_DORM_COST + AVG_MEAL_PLAN_COST + AVG_PARKING_COST) * DAYS_ELAPSED)
+    hash['{dall}'] = '${:,.2f}'.format(
+        AVG_DORM_COST + AVG_MEAL_PLAN_COST + AVG_PARKING_COST)
 
-    elif(type.lower() == 'douttut'):
-        return '${:,.2f}'.format((AVG_OUT_OF_STATE_COST))
+    hash['{tall}'] = '${:,.2f}'.format(
+        (AVG_DORM_COST + AVG_MEAL_PLAN_COST + AVG_PARKING_COST) * DAYS_ELAPSED)
 
-    elif(type.lower() == 'touttut'):
-        return '${:,.2f}'.format((AVG_OUT_OF_STATE_COST * DAYS_ELAPSED))
+    hash['{douttut}'] = '${:,.2f}'.format((AVG_OUT_OF_STATE_COST))
 
-    elif(type.lower() == 'dintut'):
-        return '${:,.2f}'.format((AVG_IN_STATE_COST))
+    hash['{touttut}'] = '${:,.2f}'.format(
+        (AVG_OUT_OF_STATE_COST * DAYS_ELAPSED))
 
-    elif(type.lower() == 'tintut'):
-        return '${:,.2f}'.format((AVG_IN_STATE_COST * DAYS_ELAPSED))
+    hash['{dintut}'] = '${:,.2f}'.format((AVG_IN_STATE_COST))
 
-    return
+    hash['{tintut}'] = '${:,.2f}'.format((AVG_IN_STATE_COST * DAYS_ELAPSED))
+
+    return hash
 
 
 def load_Post():
     f = open("messages.txt", "r")
     tweets = []
+    keyword_dict = compute_Cost()
 
     for line in f:
         for word in line.split():
             if '{' in word and '}' in word:  # Replace field with value
-                line = line.replace(word, computeCost(word[1:-1]))
+                line = line.replace(word, keyword_dict[word.lower()])
         tweets.append(line[:-1])  # remove new line
 
     return tweets
@@ -79,3 +73,6 @@ def create_status(postIndex=-1):
         postIndex = random.randrange(0, len(tweets) - 1)
 
     return tweets[postIndex]
+
+
+print(create_status())
